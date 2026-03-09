@@ -25,19 +25,24 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.titulo}>CALCULADORA IMG</Text>
 
+      <Text> ESTATURA </Text>
       <TextInput
+     
       style={styles.caja}
       value={estatura}
       onChangeText={setEstatura}
       placeholder='Ingresa tu estatura en centimetros'
       
       />
+       <Text> PESO </Text>
       <TextInput
       style={styles.caja}
       value={peso}
       onChangeText={setPeso}
        placeholder='Ingresa tu peso en kilogramos'
       />
+
+
       <Button 
       title='ok'
       onPress={calcularIMC}
