@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Button, Text, View, FlatList, TextInput } from 'react-native';
+import { StyleSheet, Button, Text, View, FlatList, TextInput, TouchableOpacity, Modal } from 'react-native';
 import { ScrollView } from 'react-native';
+
 
 let productos = [
   { nombre: 'Papitas', categoria: '(SNAKS)', precioCompra: 0.40, precioVenta: 0.45, id: 100 },
@@ -10,8 +11,8 @@ let productos = [
   { nombre: 'Pony Malta', categoria: '(BEBIDAS)', precioCompra: 0.75, precioVenta: 0.80, id: 103 },
 ];
 
-let ItemProductos = (props) => {
-  return (
+let ItemProductos = (props) => (
+  <TouchableOpacity onPress={props.editar}>
     <View style={styles.lista}>
 
       <Text style={styles.codigo}>
@@ -28,13 +29,13 @@ let ItemProductos = (props) => {
       </Text>
 
       <View style={styles.botonesFila}>
-        <Button title="E" color="blue" onPress={props.editar} />
         <Button title="X" color="red" onPress={props.eliminar} />
       </View>
 
     </View>
-  );
-}
+  </TouchableOpacity>
+)
+
 
 
 export default function App() {
@@ -51,9 +52,17 @@ export default function App() {
 
   const [error, setError] = useState("");
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [indiceEliminar, setIndiceEliminar] = useState(null);
+
 
   let eliminarProducto = (indice) => {
-    productos.splice(indice, 1);
+    setIndiceEliminar(indice);
+    setModalVisible(true);
+  }
+  let confirmarEliminar = () => {
+    productos.splice(indiceEliminar, 1);
+    setModalVisible(false);
     limpiar();
   }
 
@@ -145,7 +154,7 @@ export default function App() {
         <TextInput
           style={styles.input}
           value={precioCompra}
-          onChangeText={(valor) => {
+          onChangeText={valor => {
             setCompra(valor);
 
             let venta = parseFloat(valor) * 1.20;
@@ -205,8 +214,37 @@ export default function App() {
               eliminar={() => eliminarProducto(index)}
             />
           )}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
         />
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          animationType="fade"
+        >
+
+          <View style={styles.modalFondo}>
+            <View style={styles.modalCaja}>
+
+              <Text style={styles.modalTexto}>
+                ¿Está seguro que quiere eliminar?
+              </Text>
+
+              <View style={styles.modalBotones}>
+                <Button
+                  title="Aceptar"
+                  onPress={confirmarEliminar}
+                  color="red"
+                />
+                <Button
+                  title="Cancelar"
+                  onPress={() => setModalVisible(false)}
+                />
+              </View>
+
+            </View>
+          </View>
+
+        </Modal>
         <View style={styles.pie}>
           <Text>ANGIE MORA</Text>
         </View>
@@ -316,7 +354,33 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
     fontWeight: "bold"
-  }
+  },
+  modalFondo:{
+  flex:1,
+  justifyContent:"center",
+  alignItems:"center",
+  backgroundColor:"rgba(0,0,0,0.4)"
+},
+
+modalCaja:{
+  backgroundColor:"white",
+  padding:20,
+  borderRadius:10,
+  width:250,
+  alignItems:"center"
+},
+
+modalTexto:{
+  fontSize:16,
+  marginBottom:20,
+  textAlign:"center"
+},
+
+modalBotones:{
+  flexDirection:"row",
+  gap:10
+}
+
 
 
 
