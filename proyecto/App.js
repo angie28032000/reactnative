@@ -100,11 +100,11 @@ export default function App() {
   }
 
   let editarProducto = (producto, indice) => {
-    setCodigo(producto.id);
+    setCodigo(producto.id.toString());
     setNombre(producto.nombre);
     setCategoria(producto.categoria);
-    setCompra(producto.precioCompra);
-    setVenta(producto.precioVenta);
+    setCompra(producto.precioCompra.toString());
+    setVenta(producto.precioVenta.toString());
 
     setIndiceSeleccionado(indice);
     setEditando(true);
